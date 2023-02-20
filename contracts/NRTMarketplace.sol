@@ -16,6 +16,8 @@ abstract contract NRTMarketplace is ERC721URIStorage {
     Counters.Counter private _tokenIds;
     Counters.Counter private _itemsSold;
 
+    uint256 listingPrice = 0.0025 ether;
+
     address payable owner;
 
     mapping(uint256 => MarketItem) private idMarketItem;
@@ -36,7 +38,18 @@ abstract contract NRTMarketplace is ERC721URIStorage {
         bool sold
     );
 
+    modifier onlyOwner() {
+        require(
+            msg.sender == owner, "Only owner of the Marketplace can change the listing price"
+        );
+        _;
+    }
+
     constructor() ERC721 ("NFT Metavarse Token", "MYNFT") {
-        
+        owner == payable(msg.sender);
+    }
+
+    function updateListingPrice(uint256 _listingPrice) public payable onlyOwner {
+        listingPrice = _listingPrice;
     }
 }
